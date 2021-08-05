@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Todo-List{% endblock title %}
+
+{% block content %}
+
+<form action='' method='POST'>
+    {{form.hidden_tag()}}
+    <div class="input-group mb-3 pt-5 px-5">
+        {{form.item_title(placeholder='Type the work you have to do', class="form-control")}}
+        {{form.submit(class="btn btn-outline-primary")}}
+    </div>
+</form>
+
+<div class='px px-md-5'>
+    <ul class='list-group text-wrap'>
+        {% for item in items %}
+        <li class="list-group-item list-group-item-light d-flex justify-content-between align-items-center" style="background-color:  	#F5F5F5;">
+            <b>{{item}}</b>
+            <div class="btn-group">
+                <button type="button" class="btn btn-success btn-sm">Completed</button>
+				<button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#edit-menu-modal-{{item.item_id}}">Edit</button>
+				<a href="{{ url_for('delete_item', item_id=item.item_id) }}"><button type="button" class="btn btn-danger btn-sm">Delete</button></a>
+            </div>
+        </li>
+
+        <div class="modal fade" id="edit-menu-modal-{{item.item_id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered">
+					<div class="modal-content">
+						<div class="modal-header bg-warning">
+						    <h4 class="modal-title" id="exampleModalLabel">Edit Menu</h4>
+                        </div>
+                        <form method="POST" action="{{url_for('edit_item', item_id=item.item_id)}}">
+                            <div class="modal-body">
+                                {{edit_form.new_item_title(value=item.todo_item, class="form-control")}}
+                            </div>
+                            <div class="modal-footer">
+                                {{edit_form.submit(class="btn btn-outline-warning")}}
+                            </div>
+                        </form>
+					</div>
+				</div>
+			</div> 
+
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock content %}
